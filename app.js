@@ -10,7 +10,9 @@ app.use(express.json());
 
 // average number of n ( mean )
 app.get('/mean', (req, res, next) => {
+
     try {
+        if(!(req.query.hasOwnProperty('num') && req.query['num'].length > 0)) throw new ExpressError('Nums are required', 400);
         let operation = "mean";
         // split query string and convert to int
         let {num} = req.query
