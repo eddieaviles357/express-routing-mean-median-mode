@@ -13,9 +13,14 @@ app.get('/mean', (req, res, next) => {
     try {
         let operation = "mean";
         // split query string and convert to int
-        let nums = req.query['num'].split(',').map(str => Number(str));
-        let value = nums.reduce((curr, nextVal) => curr + nextVal, 0) / nums.length;
-        if(!value) throw new ExpressError('Could not conpute mean', 400);
+        let {num} = req.query
+        num = num
+            .split(',')
+            .map( str => { 
+                if( isNaN(+str) ) throw new ExpressError(`${str} is not a number`, 400);
+                return +str;
+            });
+        let value = num.reduce( (curr, nextVal) => curr + nextVal, 0) / num.length;
         return res.status(200).json( {response: {  operation, value }} );
     } catch (err) {
         return next(err);
@@ -23,9 +28,9 @@ app.get('/mean', (req, res, next) => {
 });
 
 // midpoint
-// app.get('/median', (req, res) => {
-//     res.send('<h1>median route')
-// });
+app.get('/median', (req, res) => {
+    res.send('<h1>median route')
+});
 
 // most frequent
 // app.get('/mode', (req, res) => {
@@ -34,7 +39,7 @@ app.get('/mean', (req, res, next) => {
  
 app.use((err, req, res, next) => {
     if(err instanceof TypeError) console.error('Unable to convert string');
-    if(err instanceof ExpressError) console.error(`\n\nERROR:MESSAGE:${err.msg}\nSTATUS:CODE:${err.status}`);
+    if(err instanceof ExpressError) console.error(`\n\nERROR:MESSAGE: ${err.msg}\nSTATUS:CODE:${err.status}`);
     return res.status(err.status).send(err.msg)
 }) 
 
