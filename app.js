@@ -8,14 +8,19 @@ const port = 3000;
 
 app.use(express.json());
 
+const errIfNotValidQuery = (req) => {
+    if(!(req.query.hasOwnProperty('num') && req.query['num'].length > 0)) {
+        throw new ExpressError('Nums are required', 400);
+    }
+}
 // average number of n ( mean )
 app.get('/mean', (req, res, next) => {
 
     try {
-        if(!(req.query.hasOwnProperty('num') && req.query['num'].length > 0)) throw new ExpressError('Nums are required', 400);
+        errIfNotValidQuery(req);
         let operation = "mean";
         // split query string and convert to int
-        let {num} = req.query
+        let {num} = req.query;
         num = num
             .split(',')
             .map( str => { 
@@ -31,6 +36,11 @@ app.get('/mean', (req, res, next) => {
 
 // midpoint
 app.get('/median', (req, res) => {
+    try {
+        errIfNotValidQuery(req);
+    } catch (err) {
+        return next(err);
+    }
     res.send('<h1>median route')
 });
 
