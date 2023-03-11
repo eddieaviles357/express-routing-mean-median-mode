@@ -2,47 +2,36 @@
 // nodemon --inspect 
 const express = require('express');
 const ExpressError = require('./expressError');
+const {isQueryValid, convertToNumsArray, getMean} = require('./utils');
 
 const app = express();
 const port = 3000;
 
 app.use(express.json());
 
-const errIfNotValidQuery = (req) => {
-    if(!(req.query.hasOwnProperty('num') && req.query['num'].length > 0)) {
-        throw new ExpressError('Nums are required', 400);
-    }
-}
 // average number of n ( mean )
 app.get('/mean', (req, res, next) => {
-
+    let query = req.query;
     try {
-        errIfNotValidQuery(req);
-        let operation = "mean";
-        // split query string and convert to int
-        let {num} = req.query;
-        num = num
-            .split(',')
-            .map( str => { 
-                if( isNaN(+str) ) throw new ExpressError(`${str} is not a number`, 400);
-                return +str;
-            });
-        let value = num.reduce( (curr, nextVal) => curr + nextVal, 0) / num.length;
-        return res.status(200).json( {response: {  operation, value }} );
+        if( !(isQueryValid(query)) ) throw new ExpressError('nums are required', 400);
+        let {nums} = query;
+        nums = convertToNumsArray(nums);
+        let mean = getMean(nums);
+        return res.status(200).json( {response: {  operation: "mean", value: mean }} );
     } catch (err) {
         return next(err);
     };
 });
 
 // midpoint
-app.get('/median', (req, res) => {
-    try {
-        errIfNotValidQuery(req);
-    } catch (err) {
-        return next(err);
-    }
-    res.send('<h1>median route')
-});
+// app.get('/median', (req, res) => {
+//     try {
+//         if(!(isQueryValid(req))) throw new ExpressError('nums are required', 400);
+//     } catch (err) {
+//         return next(err);
+//     }
+//     res.send('<h1>median route')
+// });
 
 // most frequent
 // app.get('/mode', (req, res) => {
