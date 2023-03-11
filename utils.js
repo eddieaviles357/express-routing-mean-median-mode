@@ -19,11 +19,9 @@ const queryToNumsArr = (query, nums) => {
 const getMean = arr => arr.reduce( (curr, nextVal) => curr + nextVal, 0) / arr.length;
 const getMedian = arr => {
     let sortedArr = arr.sort((a,b) => a-b);
-    if(arr.length % 2 === 1) {
-        return sortedArr[ Math.floor( sortedArr.length / 2 ) ];
-    } else {
-        return ( sortedArr[ (sortedArr.length/2) ] + sortedArr[ (sortedArr.length/2) - 1 ]) / 2;
-    }
+    return (arr.length % 2 === 1) ? 
+        sortedArr[ Math.floor( sortedArr.length / 2 ) ] :
+        ( sortedArr[ (sortedArr.length/2) ] + sortedArr[ (sortedArr.length/2) - 1 ]) / 2;
 }
 module.exports = {
     queryToNumsArr,
