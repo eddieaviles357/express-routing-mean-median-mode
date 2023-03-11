@@ -2,7 +2,7 @@
 // nodemon --inspect 
 const express = require('express');
 const ExpressError = require('./expressError');
-const {queryToNumsArr, getMean, getMedian} = require('./utils');
+const {queryToNumsArr, getMean, getMedian, getMode} = require('./utils');
 
 const app = express();
 const port = 3000;
@@ -23,9 +23,8 @@ app.get('/mean', (req, res, next) => {
 // midpoint
 app.get('/median', (req, res) => {
     let query = req.query;
-    console.log(req)
     try {
-        let nums = queryToNumsArr(query, query['nums'])
+        let nums = queryToNumsArr(query, query['nums']);
         let median = getMedian(nums);
         return res.status(200).json( {response: { operation: "median", value: median}})
     } catch (err) {
@@ -34,9 +33,16 @@ app.get('/median', (req, res) => {
 });
 
 // most frequent
-// app.get('/mode', (req, res) => {
-//     res.send('<h1>median route')
-// });
+app.get('/mode', (req, res) => {
+    let query = req.query;
+    try {
+        let nums = queryToNumsArr(query, query['nums']);
+        let mode = getMode(nums);
+        return res.status(200).json( {response: { operation: "mode", value: mode}})
+    } catch (err) {
+        return next(err);
+    };
+});
  
 app.use((err, req, res, next) => {
     if(err instanceof TypeError) console.error('Unable to convert string');
