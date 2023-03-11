@@ -11,10 +11,14 @@ const convertToNumsArray = nums => {
             });
     };
 
-const getMean = num => num.reduce( (curr, nextVal) => curr + nextVal, 0) / num.length;
+const queryToNumsArr = (query, nums) => {
+    if( !isQueryValid(query) ) throw new ExpressError('nums are required', 400);
+    return convertToNumsArray(nums)
+}
 
+const getMean = num => num.reduce( (curr, nextVal) => curr + nextVal, 0) / num.length;
+const getMedian = num => num;
 module.exports = {
-    isQueryValid,
-    convertToNumsArray,
-    getMean
+    getMean,
+    queryToNumsArr
 }
