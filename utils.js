@@ -20,11 +20,29 @@ const getMean = arr => arr.reduce( (curr, nextVal) => curr + nextVal, 0) / arr.l
 const getMedian = arr => {
     let sortedArr = arr.sort((a,b) => a-b);
     return (arr.length % 2 === 1) ? 
-        sortedArr[ Math.floor( sortedArr.length / 2 ) ] :
-        ( sortedArr[ (sortedArr.length/2) ] + sortedArr[ (sortedArr.length/2) - 1 ]) / 2;
+                sortedArr[ Math.floor( sortedArr.length / 2 ) ] :
+                ( sortedArr[ (sortedArr.length/2) ] + sortedArr[ (sortedArr.length/2) - 1 ]) / 2;
 }
+const getMode = arr => {
+    let count = 0;
+    let mostFreq = 0;
+    let freqArr = arr.reduce((curr, next) => {
+                    curr[next] = (curr[next] || 0) + 1;
+                    return curr;
+                }, {});
+
+    for (key in freqArr) {
+        if (freqArr[key] > count) {
+          mostFreq = key;
+          count = freqArr[key];
+        }
+      }
+      return mostFreq;
+}
+
 module.exports = {
     queryToNumsArr,
     getMean,
-    getMedian
+    getMedian,
+    getMode
 }
