@@ -2,7 +2,7 @@
 // nodemon --inspect 
 const express = require('express');
 const ExpressError = require('./expressError');
-const {queryToNumsArr, getMean} = require('./utils');
+const {queryToNumsArr, getMean, getMedian} = require('./utils');
 
 const app = express();
 const port = 3000;
@@ -23,9 +23,11 @@ app.get('/mean', (req, res, next) => {
 // midpoint
 app.get('/median', (req, res) => {
     let query = req.query;
+    console.log(req)
     try {
-        if( !(isQueryValid(query)) ) throw new ExpressError('nums are required', 400);
-
+        let nums = queryToNumsArr(query, query['nums'])
+        let median = getMedian(nums);
+        return res.status(200).json( {response: { operation: "median", value: median}})
     } catch (err) {
         return next(err);
     };
