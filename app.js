@@ -21,11 +21,10 @@ app.get('/mean', (req, res, next) => {
 });
 
 // midpoint
-app.get('/median', (req, res) => {
+app.get('/median', (req, res, next) => {
     let query = req.query;
     try {
-        let nums = queryToNumsArr(query, query['nums']);
-        let median = getMedian(nums);
+        let median = getMedian(queryToNumsArr(query, query['nums']));
         return res.status(200).json( {response: { operation: "median", value: median}})
     } catch (err) {
         return next(err);
@@ -33,11 +32,10 @@ app.get('/median', (req, res) => {
 });
 
 // most frequent
-app.get('/mode', (req, res) => {
+app.get('/mode', (req, res, next) => {
     let query = req.query;
     try {
-        let nums = queryToNumsArr(query, query['nums']);
-        let mode = getMode(nums);
+        let mode = getMode(queryToNumsArr(query, query['nums']));
         return res.status(200).json( {response: { operation: "mode", value: mode}})
     } catch (err) {
         return next(err);
@@ -45,9 +43,11 @@ app.get('/mode', (req, res) => {
 });
  
 app.use((err, req, res, next) => {
-    if(err instanceof TypeError) console.error('Unable to convert string');
-    if(err instanceof ExpressError) console.error(`\n\nERROR:MESSAGE: ${err.msg}\nSTATUS:CODE:${err.status}`);
-    return res.status(err.status).send(err.msg)
+    let errMsg = `\n\nERROR:MESSAGE: ${err.msg}\nSTATUS:CODE:${err.status}`;
+
+    if (err instanceof TypeError) console.error(errMsg);
+    if (err instanceof ExpressError) console.error(errMsg);
+    return res.status(err.status).send(err.msg);
 }) 
 
 app.listen(port, () => {
