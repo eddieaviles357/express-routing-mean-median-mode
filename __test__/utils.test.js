@@ -51,4 +51,4 @@ describe('utils test', function() {
         expect(typeof getMode(numArr)).toBe('number');
         expect(getMode([1,1,2,3])).toBe(1);
     });
-});
+}); 
