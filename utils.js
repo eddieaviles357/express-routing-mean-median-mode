@@ -39,12 +39,14 @@ const getMode = (arr) => {
           count = freqArr[key];
         }
       }
-      return mostFreq;
+      return Number(mostFreq);
 }
 
 module.exports = {
     queryToNumsArr,
     getMean,
     getMedian,
-    getMode
+    getMode,
+    isQueryValid,
+    convertToNumsArray
 }
